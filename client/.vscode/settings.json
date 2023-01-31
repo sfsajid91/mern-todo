@@ -1,0 +1,11 @@
+{
+    "[javascriptreact]": {
+        "editor.formatOnSave": false,
+        "editor.defaultFormatter": null,
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": true,
+            "source.fixAll": true,
+            "source.organizeImports": true
+        }
+    }
+}
