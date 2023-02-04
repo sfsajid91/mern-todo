@@ -9,6 +9,15 @@ const headers = (req, res, next) => {
     next();
 };
 
-const middlewares = [express.json(), morgan('dev'), cors(), headers, cookieParser()];
+const middlewares = [
+    express.json(),
+    morgan('dev'),
+    cors({
+        origin: process.env.CLIENT_URL,
+        credentials: true,
+    }),
+    headers,
+    cookieParser(),
+];
 
 module.exports = middlewares;

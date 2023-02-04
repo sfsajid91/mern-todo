@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const authRoutes = require('./authRoute');
+const todoRoutes = require('./todoRoute');
 
 router.get('/', (req, res) => {
     res.status(200).json({
@@ -8,5 +9,6 @@ router.get('/', (req, res) => {
 });
 
 router.use('/auth', authRoutes);
+router.use('/todos', todoRoutes);
 
 module.exports = router;

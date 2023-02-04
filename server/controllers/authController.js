@@ -41,14 +41,14 @@ const signUp = async (req, res, next) => {
         if (!userRole) {
             await User.create({ email, password: hashedPassword, name, roles: ['USER', 'ADMIN'] });
             return res.status(201).json({
-                message: 'User created successfully',
+                message: 'Account created successfully',
             });
         }
 
         await User.create({ email, password: hashedPassword, name });
 
         return res.status(201).json({
-            message: 'User created successfully',
+            message: 'Account created successfully',
         });
     } catch (err) {
         return next(err);
@@ -88,8 +88,10 @@ const login = async (req, res, next) => {
         }
 
         if (!user.verified) {
-            return res.status(401).json({
-                message: 'Please verify your email',
+            return res.status(406).json({
+                error: {
+                    email: 'Please verify your email',
+                },
             });
         }
 
@@ -105,6 +107,8 @@ const login = async (req, res, next) => {
             .cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 maxAge: process.env.REFRESH_TOKEN_COOKIE_VALIDITY,
+                secure: true,
+                sameSite: 'none',
             })
             .json({
                 message: 'Logged in successfully',
@@ -131,6 +135,7 @@ const login = async (req, res, next) => {
 const refreshController = async (req, res, next) => {
     try {
         const { refreshToken } = req.cookies;
+        // console.log(refreshToken);
         if (!refreshToken) {
             return res.status(401).json({
                 message: 'Unauthorized',
@@ -142,13 +147,17 @@ const refreshController = async (req, res, next) => {
             process.env.REFRESH_TOKEN_SECRET,
             (err, decode) => {
                 if (err) {
-                    return res.status(401).json({
-                        message: 'Unauthorized',
-                    });
+                    return null;
                 }
                 return decode;
             }
         );
+
+        if (!decoded) {
+            return res.status(401).json({
+                message: 'Unauthorized',
+            });
+        }
 
         const user = await User.findById(decoded.userId).lean().exec();
         if (!user) {
@@ -164,6 +173,11 @@ const refreshController = async (req, res, next) => {
         return res.status(201).json({
             message: 'Token refreshed successfully',
             accessToken,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+            },
         });
     } catch (err) {
         return next(err);

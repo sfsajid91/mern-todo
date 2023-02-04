@@ -21,6 +21,12 @@
     },
     "plugins": ["prettier", "react", "react-hooks"],
     "rules": {
+        "no-param-reassign": [
+            "error",
+            {
+                "props": false
+            }
+        ],
         "no-underscore-dangle": "off",
         "jsx-a11y/label-has-associated-control": "off",
         "react/react-in-jsx-scope": "off",
