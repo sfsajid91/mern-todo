@@ -20,7 +20,7 @@ const sendEmailConfirmation = async (name, email, confirmationCode) => {
             html: `<h1>Email Confirmation</h1>
             <h2>Hello ${name}</h2>
             <p>Thank you for subscribing. Please confirm your email by clicking on the following link</p>
-            <a href=http://localhost:8080/confirm/${confirmationCode}> Click here</a>
+            <a href=${process.env.CLIENT_URL}/verify/${confirmationCode}> Click here</a>
             </div>`,
         });
         console.log('email sent sucessfully');

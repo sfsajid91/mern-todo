@@ -26,7 +26,9 @@ const signUp = async (req, res, next) => {
             expiresIn: process.env.EMAIL_TOKEN_EXPIRE_IN,
         });
 
-        const sentEmail = await sendEmailConfirmation(name, email, token);
+        const modifiedToken = token.replaceAll('.', 'DOT');
+
+        const sentEmail = await sendEmailConfirmation(name, email, modifiedToken);
 
         if (!sentEmail) {
             const err = new Error('Email not sent');
@@ -196,21 +198,33 @@ const logout = async (req, res, next) => {
 
 const emailVerification = async (req, res, next) => {
     try {
-        const { token } = req.params;
+        const { token: oldToken } = req.params;
+        const token = oldToken.replaceAll('DOT', '.');
         const hasToken = await Token.findOne({ token });
         if (!hasToken) {
+            const err = new Error('The URL you are looking for does not exist');
+            err.status = 404;
+            throw err;
+        }
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decode) => {
+            if (err) {
+                if (err.name === 'TokenExpiredError') {
+                    const data = jwt.decode(token);
+                    return {
+                        expired: true,
+                        userId: data.userId,
+                    };
+                }
+                return false;
+            }
+            return decode;
+        });
+
+        if (!decoded) {
             return res.status(400).json({
                 message: 'Invalid token',
             });
         }
-        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decode) => {
-            if (err) {
-                return res.status(400).json({
-                    message: 'Invalid token',
-                });
-            }
-            return decode;
-        });
 
         const user = await User.findOne({ email: decoded.email });
         if (!user) {
