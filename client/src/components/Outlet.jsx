@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { selectCurrentUser } from '../features/auth/authSlice';
 
-import routes from '../utils/routes';
+import routes, { publicRoutes } from '../utils/routes';
 
 export function Private() {
     const user = useSelector(selectCurrentUser);
@@ -29,10 +29,14 @@ export function Public() {
 
     const location = useLocation();
 
+    const isPublicRoute = publicRoutes.some((route) => route === location.state?.from);
+
+    const destination = isPublicRoute ? routes.todos : location.state?.from;
+
     return (
         <>
             {user ? (
-                <Navigate to={routes.todos} replace state={{ from: location.pathname }} />
+                <Navigate to={destination} replace state={{ from: location.pathname }} />
             ) : (
                 <Outlet />
             )}

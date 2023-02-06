@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 
 export default function Todo({ todo }) {
     const colors = [
@@ -14,8 +15,10 @@ export default function Todo({ todo }) {
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
     return (
-        <div
+        <Link
             className={`px-4 py-3 cursor-pointer shadow-md rounded bg-gradient-to-t flex justify-between gap-4 flex-col ${randomColor}`}
+            to={`/todos/${todo?._id}`}
+            state={{ todo }}
         >
             <div className="space-y-2">
                 <h4 className="text-lg font-semibold">{todo?.title}</h4>
@@ -29,10 +32,14 @@ export default function Todo({ todo }) {
             </div>
             <div className="flex justify-between items-center mt-auto">
                 <p className="text-xs text-gray-800">{moment(todo?.createdAt).fromNow()}</p>
-                <p className="inline-flex justify-center items-center py-0.5 px-4 text-[13px] bg-accent rounded-full">
+                <p
+                    className={`inline-flex justify-center items-center py-0.5 px-4 text-[13px] ${
+                        todo?.completed ? 'bg-accent' : 'bg-error'
+                    } rounded-full`}
+                >
                     {todo?.completed ? 'Completed' : 'Pending'}
                 </p>
             </div>
-        </div>
+        </Link>
     );
 }

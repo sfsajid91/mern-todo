@@ -5,4 +5,6 @@ const routes = {
     todos: '/',
 };
 
+export const publicRoutes = [routes.login, routes.register];
+
 export default routes;

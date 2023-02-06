@@ -1,6 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import Lottie from 'lottie-react';
+import { Helmet } from 'react-helmet-async';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import animationData from '../assets/login.json';
@@ -37,6 +39,10 @@ export default function Singup() {
     const onSubmit = async (data) => {
         try {
             await signup(data).unwrap();
+            // toast.success('Signup successfully');
+            toast('Please Verify your Email!', {
+                icon: '📧',
+            });
             navigate('/login');
         } catch (err) {
             let message = 'Something went wrong';
@@ -50,9 +56,9 @@ export default function Singup() {
 
     return (
         <>
-            {/* <Helmet>
-                <title>Login - TODO App</title>
-            </Helmet> */}
+            <Helmet>
+                <title>Signup - TODO App</title>
+            </Helmet>
             <div className="min-h-screen flex justify-center items-center w-full">
                 <div className="flex justify-between items-center">
                     <div className="w-1/3 hidden md:block">

@@ -1,8 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import Lottie from 'lottie-react';
+import { Helmet } from 'react-helmet-async';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import animationData from '../assets/register.json';
 import TextInput from '../components/TextInput';
@@ -35,23 +37,25 @@ export default function Login() {
     const dispatch = useDispatch();
     const [login, { isLoading }] = useLoginMutation();
 
-    // const location = useLocation();
+    const location = useLocation();
     const navigate = useNavigate();
 
     const onSubmit = async (data) => {
         try {
             const { user, accessToken } = await login(data).unwrap();
             dispatch(setCredentials({ user, accessToken }));
+            localStorage.setItem('user', JSON.stringify(user));
             setValue('email', '');
             setValue('password', '');
-            // if (location.state?.from && !location.state?.from === location.pathname) {
-            //     return navigate(location.state.from);
-            // }
+            toast.success('Login successfully');
+            if (location.state?.from && !location.state?.from === location.pathname) {
+                return navigate(location.state.from);
+            }
             return navigate('/');
         } catch (err) {
             let message = 'Something went wrong';
             if (err?.data) {
-                message = err.data?.message;
+                message = err.data?.message || err.data?.error?.email;
             }
             setError('email', { message });
             setError('password', { message });
@@ -60,9 +64,9 @@ export default function Login() {
 
     return (
         <>
-            {/* <Helmet>
+            <Helmet>
                 <title>Login - TODO App</title>
-            </Helmet> */}
+            </Helmet>
             <div className="min-h-screen flex justify-center items-center">
                 <div className="flex justify-between items-center">
                     <div className="w-1/3 hidden md:block">
