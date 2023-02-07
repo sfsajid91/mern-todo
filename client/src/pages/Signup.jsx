@@ -45,12 +45,10 @@ export default function Singup() {
             });
             navigate('/login');
         } catch (err) {
-            let message = 'Something went wrong';
-            if (err?.data) {
-                message = err.data?.message;
-            }
-            setError('email', { message });
-            setError('password', { message });
+            const message = 'Something went wrong';
+
+            setError('email', { type: 'manual', message: err.data?.error?.email || message });
+            setError('password', { type: 'manual', message: err.data?.error?.password });
         }
     };
 
