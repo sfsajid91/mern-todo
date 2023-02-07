@@ -119,8 +119,9 @@ const login = async (req, res, next) => {
             .cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 maxAge: process.env.REFRESH_TOKEN_COOKIE_VALIDITY,
+
                 secure: true,
-                sameSite: 'strict',
+                sameSite: 'none',
             })
             .json({
                 message: 'Logged in successfully',
