@@ -120,7 +120,7 @@ const login = async (req, res, next) => {
                 httpOnly: true,
                 maxAge: process.env.REFRESH_TOKEN_COOKIE_VALIDITY,
                 secure: true,
-                sameSite: 'none',
+                sameSite: 'strict',
             })
             .json({
                 message: 'Logged in successfully',
