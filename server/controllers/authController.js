@@ -21,6 +21,16 @@ const signUp = async (req, res, next) => {
                 error: errors.mapped(),
             });
         }
+        const existingUser = await User.findOne({ email }).lean().exec();
+
+        if (existingUser) {
+            return res.status(400).json({
+                error: {
+                    email: 'Email already exists',
+                },
+            });
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
         const token = jwt.sign({ email }, process.env.ACCESS_TOKEN_SECRET, {
             expiresIn: process.env.EMAIL_TOKEN_EXPIRE_IN,

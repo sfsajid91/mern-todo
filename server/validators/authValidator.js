@@ -1,18 +1,10 @@
 const { body } = require('express-validator');
-const User = require('../models/userModel');
 
 const signupValidator = [
     body('email')
         .isEmail()
         .withMessage('Please enter a valid email address.')
-        .custom(async (email) => {
-            const user = await User.findOne({ email }).lean().exec();
-            if (user) {
-                throw new Error('Email already exists');
-                // return Promise.reject('Email already exists');
-            }
-            return true;
-        })
+
         .normalizeEmail(),
     body('password')
         .isLength({ min: 8 })
