@@ -35,19 +35,20 @@ export default function Todos() {
                         ))}
                     </div>
                 )}
+
                 {!isLoading && !error && (
                     <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-x-3 gap-y-4">
                         {todos.length > 0 &&
                             todos.map((todo) => <Todo key={todo._id} todo={todo} />)}
-                        {todos.length === 0 && (
-                            <div className="flex justify-center items-center">
-                                <h1 className="text-center text-3xl font-semibold mb-4">
-                                    No Todos Found
-                                </h1>
-                            </div>
-                        )}
                     </div>
                 )}
+
+                {!isLoading && todos.length === 0 && (
+                    <div className="flex justify-center items-center">
+                        <h1 className="text-center text-3xl font-semibold mb-4">No Todos Found</h1>
+                    </div>
+                )}
+
                 {!isLoading && error && (
                     <div className="flex justify-center items-center">
                         <h1 className="text-center text-3xl font-semibold mb-4">
