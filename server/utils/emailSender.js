@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 
-const sendEmailConfirmation = async (name, email, confirmationCode) => {
+const sendEmailConfirmation = async (name, email, confirmationCode, details = {}) => {
     try {
         const transporter = nodemailer.createTransport({
             // host: process.env.HOST,
@@ -16,11 +16,13 @@ const sendEmailConfirmation = async (name, email, confirmationCode) => {
         await transporter.sendMail({
             from: `${process.env.APP_NAME} <${process.env.APP_EMAIL}>`,
             to: email,
-            subject: `Email Confirmation For ${process.env.APP_NAME}`,
-            html: `<h1>Email Confirmation</h1>
+            subject: `${details.title} For ${process.env.APP_NAME}`,
+            html: `<h1>${details.title}</h1>
             <h2>Hello ${name}</h2>
-            <p>Thank you for subscribing. Please confirm your email by clicking on the following link</p>
-            <a href=${process.env.CLIENT_URL}/verify/${confirmationCode}> Click here</a>
+            <p>${details.text}</p>
+            <a href=${process.env.CLIENT_URL}/${
+                details.link || 'verify'
+            }/${confirmationCode}> Click here</a>
             </div>`,
         });
         console.log('email sent sucessfully');

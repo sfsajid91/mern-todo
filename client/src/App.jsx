@@ -3,9 +3,11 @@ import Layout from './components/Layout';
 import { Private, Public } from './components/Outlet';
 import EditTodo from './pages/EditTodo';
 import EmailVerification from './pages/EmailVerification';
+import ForgotPass from './pages/ForgotPass';
 import Login from './pages/Login';
 import NewTodo from './pages/NewTodo';
 import NotFound from './pages/NotFound';
+import ResetPassword from './pages/ResetPassword';
 import Signup from './pages/Signup';
 import Todos from './pages/Todos';
 
@@ -24,6 +26,8 @@ function App() {
                     <Route path="signup" element={<Signup />} />
                 </Route>
                 <Route path="verify/:token" element={<EmailVerification />} />
+                <Route path="forget-password" element={<ForgotPass />} />
+                <Route path="reset-password/:token" element={<ResetPassword />} />
                 <Route path="*" element={<NotFound />} />
             </Route>
         </Routes>

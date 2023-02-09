@@ -1,1 +1,1 @@
-# A simple express app boilerplate with eslint & prettier
+# Backend for mern-todo app

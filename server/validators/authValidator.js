@@ -25,4 +25,8 @@ const loginValidator = [
     body('email').isEmail().withMessage('Please enter a valid email address.').normalizeEmail(),
 ];
 
-module.exports = { signupValidator, loginValidator };
+const forgotPassValidator = [
+    body('email').isEmail().withMessage('Please enter a valid email address.').normalizeEmail(),
+];
+
+module.exports = { signupValidator, loginValidator, forgotPassValidator };
