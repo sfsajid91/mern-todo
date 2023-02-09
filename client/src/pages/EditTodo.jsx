@@ -1,12 +1,18 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import * as yup from 'yup';
+import Loading from '../components/Loading';
 import TextInput from '../components/TextInput';
-import { useDeleteTodoMutation, useUpdateTodoMutation } from '../features/todos/todoSlice';
+
+import {
+    useDeleteTodoMutation,
+    useGetTodosQuery,
+    useUpdateTodoMutation,
+} from '../features/todos/todoSlice';
 import NotFound from './NotFound';
 
 const schema = yup.object().shape({
@@ -23,18 +29,27 @@ export default function EditTodo() {
         setValue,
     } = useForm({ resolver: yupResolver(schema) });
 
-    const { todo = {} } = useLocation().state;
+    const { data: { todos = [] } = {}, isLoading } = useGetTodosQuery();
+
+    let todo = useMemo(() => ({ title: '', description: '', completed: false }), []);
+
     const params = useParams();
 
+    if (!isLoading && todos.length > 0) {
+        todo = todos.find((tod) => tod._id === params.id);
+    }
     const navigate = useNavigate();
     const [updateTodo] = useUpdateTodoMutation();
     const [deleteTodo] = useDeleteTodoMutation();
 
     useEffect(() => {
+        if (params.id !== todo._id) {
+            return;
+        }
         setValue('title', todo.title);
         setValue('description', todo.description);
         setValue('completed', todo.completed);
-    }, [todo, setValue]);
+    }, [setValue, params.id, todo]);
 
     const onSubmit = async (data) => {
         try {
@@ -55,6 +70,10 @@ export default function EditTodo() {
             console.log(err);
         }
     };
+
+    if (isLoading) {
+        return <Loading />;
+    }
 
     if (params.id !== todo._id) {
         return <NotFound />;
