@@ -29,7 +29,7 @@ export function Public() {
 
     const location = useLocation();
 
-    const isPublicRoute = publicRoutes.some((route) => route === location.state?.from);
+    const isPublicRoute = publicRoutes.some((route) => location.state?.from?.includes(route));
 
     const destination = isPublicRoute ? routes.todos : location.state?.from;
 
