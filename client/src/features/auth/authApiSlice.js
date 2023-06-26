@@ -1,4 +1,5 @@
 import { apiSlice } from '../../app/api/apiSlice';
+import { logOut } from './authSlice';
 
 export const authApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -30,6 +31,15 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 url: '/auth/logout',
                 method: 'GET',
             }),
+
+            async onQueryStarted(_, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                    dispatch(logOut());
+                } catch (err) {
+                    // do nothing
+                }
+            },
         }),
 
         confirmEmail: builder.query({

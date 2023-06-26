@@ -64,7 +64,7 @@ export const todoApiSlice = apiSlice.injectEndpoints({
                             'getTodo',
                             id,
                             (draft) => {
-                                draft = result.data;
+                                return result.data;
                             }
                         )
                     );

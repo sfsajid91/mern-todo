@@ -1,35 +1,33 @@
 import { BiHomeAlt, BiLogOut, BiPlus } from 'react-icons/bi';
 import { MdOutlineAccountCircle } from 'react-icons/md';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { useLogoutMutation } from '../features/auth/authApiSlice';
-import { logOut, selectCurrentUser } from '../features/auth/authSlice';
+import { selectCurrentUser } from '../features/auth/authSlice';
 
 function LoggedItems() {
     const [logout] = useLogoutMutation();
     const classes = 'duration-300 text-white hover:text-blue-500';
-    const dispatch = useDispatch();
 
-    const handleLogout = async () => {
-        try {
-            await logout();
-            dispatch(logOut());
-        } catch (error) {
-            console.log(error);
-        }
+    const handleLogout = () => {
+        logout();
     };
 
     return (
         <>
             <NavLink
                 to="/"
-                className={({ isActive }) => (isActive ? `${classes} text-blue-500` : classes)}
+                className={({ isActive }) =>
+                    isActive ? `${classes} text-blue-500` : classes
+                }
             >
                 <BiHomeAlt className="text-3xl" />
             </NavLink>
             <NavLink
                 to="/create"
-                className={({ isActive }) => (isActive ? `${classes} text-blue-500` : classes)}
+                className={({ isActive }) =>
+                    isActive ? `${classes} text-blue-500` : classes
+                }
             >
                 <BiPlus className="text-3xl" />
             </NavLink>
@@ -46,14 +44,18 @@ function NotLoggedItems() {
         <>
             <NavLink
                 to="/login"
-                className={({ isActive }) => (isActive ? `${classes} text-blue-500` : classes)}
+                className={({ isActive }) =>
+                    isActive ? `${classes} text-blue-500` : classes
+                }
             >
                 <BiLogOut className="text-3xl" />
             </NavLink>
 
             <NavLink
                 to="/signup"
-                className={({ isActive }) => (isActive ? `${classes} text-blue-500` : classes)}
+                className={({ isActive }) =>
+                    isActive ? `${classes} text-blue-500` : classes
+                }
             >
                 <MdOutlineAccountCircle className="text-3xl" />
             </NavLink>
