@@ -3,7 +3,7 @@ import Todo from '../components/Todo';
 import { useGetTodosQuery } from '../features/todos/todoSlice';
 
 export default function Todos() {
-    const { data: { todos = [] } = {}, isLoading, error } = useGetTodosQuery();
+    const { data: todos, isLoading, error } = useGetTodosQuery();
 
     return (
         <>
@@ -14,6 +14,8 @@ export default function Todos() {
                 <h1 className="text-center text-3xl font-semibold mb-4">
                     <span className="text-red-400">All</span> Todos
                 </h1>
+
+                {/* Loading Scaleton  */}
                 {isLoading && (
                     <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-x-3 gap-y-4">
                         {[...Array(8).keys()].map((_) => (
@@ -39,20 +41,25 @@ export default function Todos() {
                 {!isLoading && !error && (
                     <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-x-3 gap-y-4">
                         {todos.length > 0 &&
-                            todos.map((todo) => <Todo key={todo._id} todo={todo} />)}
+                            todos.map((todo) => (
+                                <Todo key={todo._id} todo={todo} />
+                            ))}
                     </div>
                 )}
 
                 {!isLoading && todos.length === 0 && (
                     <div className="flex justify-center items-center">
-                        <h1 className="text-center text-3xl font-semibold mb-4">No Todos Found</h1>
+                        <h1 className="text-center text-3xl font-semibold mb-4">
+                            No Todos Found
+                        </h1>
                     </div>
                 )}
 
                 {!isLoading && error && (
                     <div className="flex justify-center items-center">
                         <h1 className="text-center text-3xl font-semibold mb-4">
-                            <span className="text-red-400">Error</span> Fetching Todos
+                            <span className="text-red-400">Error</span> Fetching
+                            Todos
                         </h1>
                     </div>
                 )}

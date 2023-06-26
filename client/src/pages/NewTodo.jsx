@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -19,18 +20,25 @@ export default function NewTodo() {
         formState: { errors },
     } = useForm({ resolver: yupResolver(schema) });
 
-    const [createTodo] = useCreateTodoMutation();
+    const [createTodo, { isError, isSuccess }] = useCreateTodoMutation();
     const navigate = useNavigate();
 
-    const onSubmit = async (data) => {
-        try {
-            await createTodo(data);
+    const onSubmit = (data) => {
+        createTodo(data);
+    };
+
+    useEffect(() => {
+        if (isError) {
+            toast.error('Something went wrong');
+        }
+    }, [isError]);
+
+    useEffect(() => {
+        if (isSuccess) {
             toast.success('Todo created successfully');
             navigate('/');
-        } catch (err) {
-            console.log(err);
         }
-    };
+    }, [isSuccess, navigate]);
 
     return (
         <div className="py-4 min-h-screen">
@@ -42,7 +50,10 @@ export default function NewTodo() {
             </h1>
 
             <div className="md:max-w-lg mx-auto px-4 py-8 shadow shadow-gray-600 rounded-md space-y-4">
-                <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
+                <form
+                    className="flex flex-col gap-4"
+                    onSubmit={handleSubmit(onSubmit)}
+                >
                     <TextInput
                         label="Title"
                         placeholder="Enter a title"
@@ -59,7 +70,9 @@ export default function NewTodo() {
                             id="description"
                             placeholder="Enter a description for your todo"
                             className={`w-full h-52 text-gray-800 border rounded-md outline-none transition duration-100 px-3 py-2 ${
-                                errors.description ? 'border-red-500' : 'border-gray-300'
+                                errors.description
+                                    ? 'border-red-500'
+                                    : 'border-gray-300'
                             }`}
                             {...register('description')}
                         />

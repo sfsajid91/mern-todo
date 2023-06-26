@@ -20,12 +20,21 @@ const baseQueryWithReAuth = async (args, api, extraOptions) => {
         // 403 means access token is expired
 
         // re-authenticate with refresh token
-        const refreshResult = await baseQuery('/auth/refresh', api, extraOptions);
+        const refreshResult = await baseQuery(
+            '/auth/refresh',
+            api,
+            extraOptions
+        );
 
         if (refreshResult?.data) {
             const { user } = api.getState().auth;
             // set new access token
-            api.dispatch(setCredentials({ user, accessToken: refreshResult.data.accessToken }));
+            api.dispatch(
+                setCredentials({
+                    user,
+                    accessToken: refreshResult.data.accessToken,
+                })
+            );
 
             // retry original request with new access token
 
@@ -40,6 +49,5 @@ const baseQueryWithReAuth = async (args, api, extraOptions) => {
 
 export const apiSlice = createApi({
     baseQuery: baseQueryWithReAuth,
-    tagTypes: ['Todos', 'User'],
     endpoints: (builder) => ({}),
 });
