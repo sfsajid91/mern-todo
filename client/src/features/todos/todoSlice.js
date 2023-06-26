@@ -25,7 +25,7 @@ export const todoApiSlice = apiSlice.injectEndpoints({
                             'getTodos',
                             undefined,
                             (draft) => {
-                                draft.push(result.data);
+                                draft.unshift(result.data);
                             }
                         )
                     );
