@@ -17,9 +17,26 @@ const getAllTodos = async (req, res, next) => {
             .select('-__v')
             .lean()
             .exec();
-        return res.status(201).json({
-            todos,
-        });
+        return res.status(201).json(todos);
+    } catch (err) {
+        return next(err);
+    }
+};
+
+const getTodo = async (req, res, next) => {
+    try {
+        const { _id: userId } = req.user;
+        const { id } = req.params;
+        const todo = await Todo.findOne({ _id: id, user: userId })
+            .select('-__v')
+            .lean()
+            .exec();
+        if (!todo) {
+            return res.status(400).json({
+                message: 'Todo not found',
+            });
+        }
+        return res.status(201).json(todo);
     } catch (err) {
         return next(err);
     }
@@ -47,9 +64,8 @@ const createTodo = async (req, res, next) => {
             description,
             user: userId,
         });
-        return res.status(201).json({
-            todo,
-        });
+
+        return res.status(201).json(todo);
     } catch (err) {
         return next(err);
     }
@@ -83,9 +99,7 @@ const updateTodo = async (req, res, next) => {
         todo.completed = completed;
         await todo.save();
 
-        return res.status(201).json({
-            todo,
-        });
+        return res.status(201).json(todo);
     } catch (err) {
         return next(err);
     }
@@ -123,4 +137,5 @@ module.exports = {
     createTodo,
     updateTodo,
     deleteTodo,
+    getTodo,
 };

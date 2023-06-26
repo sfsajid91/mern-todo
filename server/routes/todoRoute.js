@@ -1,17 +1,17 @@
 const router = require('express').Router();
 
-const { isLogged } = require('../middlewares/authMiddleware');
-
 const {
     getAllTodos,
     createTodo,
     updateTodo,
     deleteTodo,
+    getTodo,
 } = require('../controllers/todoController');
 
-router.get('/', isLogged, getAllTodos);
-router.post('/', isLogged, createTodo);
-router.put('/:id', isLogged, updateTodo);
-router.delete('/:id', isLogged, deleteTodo);
+router.get('/', getAllTodos);
+router.get('/:id', getTodo);
+router.post('/', createTodo);
+router.put('/:id', updateTodo);
+router.delete('/:id', deleteTodo);
 
 module.exports = router;

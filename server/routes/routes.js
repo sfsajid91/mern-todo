@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const authRoutes = require('./authRoute');
 const todoRoutes = require('./todoRoute');
+const { isLogged } = require('../middlewares/authMiddleware');
 
 router.get('/', (req, res) => {
     res.status(200).json({
@@ -9,6 +10,6 @@ router.get('/', (req, res) => {
 });
 
 router.use('/auth', authRoutes);
-router.use('/todos', todoRoutes);
+router.use('/todos', isLogged, todoRoutes);
 
 module.exports = router;
